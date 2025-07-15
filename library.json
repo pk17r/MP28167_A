@@ -1,0 +1,23 @@
+{
+  "name": "MP28167_A",
+  "keywords": "buck,boost,dcdc,voltage,volts,current,ampere",
+  "description": "Arduino library for MP28167_A Buck Boost Converter",
+  "authors":
+  [
+    {
+      "name": "Prashant Kumar",
+      "email": "prash.k20@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/pk17r/MP28167_A.git"
+  },
+  "version": "0.0.1",
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "headers": "MP28167_A.h"
+}

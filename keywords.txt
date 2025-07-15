@@ -1,0 +1,15 @@
+# Syntax Colouring Map For MP28167_A
+
+
+# Data types (KEYWORD1)
+MP28167_A	KEYWORD1
+
+
+# Methods and Functions (KEYWORD2)
+begin	KEYWORD2
+isConnected	KEYWORD2
+
+getVout	KEYWORD2
+setVout	KEYWORD2
+getVref	KEYWORD2
+setVref	KEYWORD2
