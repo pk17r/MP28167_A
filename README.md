@@ -1,15 +1,15 @@
 
 # MP28167_A
 
-Arduino library for the MP28167_A buck boost dc dc converter.
-Library should work well for variants: MP28167_B and MP28167_N, though it hasn't been tested.
+Arduino library for the MP28167_A buck boost dc dc converter.  
+Library should work well for variants: MP28167_B and MP28167_N, though it hasn't been tested.  
 
 
 ## Description
 
-Control IC using I2C.
-
-Read datasheet for details.
+Control IC using I2C.  
+Vout can be set by setting Vref.  
+Read datasheet for details.  
 
 ### Related
 
