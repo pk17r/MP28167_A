@@ -47,6 +47,23 @@ void setup()
   Serial.println(mps28167a.getVref2VoutMultiplier());
   delay(1000);
 
+  Serial.println();
+  Serial.print("IOUT LIM(A): ");
+  Serial.println(mps28167a.getIoutLimit(), 2);
+
+  float ioutLim_set = 4.0;
+  Serial.print("Set IoutLim: ");
+  Serial.print(ioutLim_set, 2);
+  Serial.print("A = ");
+  Serial.println((mps28167a.setIoutLimit(ioutLim_set) ? "SUCCESS" : "FAILURE"));
+
+  delay(1000);
+  Serial.println();
+  Serial.print("IOUT LIM(A): ");
+  Serial.println(mps28167a.getIoutLimit(), 2);
+
+  delay(3000);
+
   Serial.println("\n\tREGISTER\tVALUE_X\tVALUE_BIN");
   Serial.print('\t');
   Serial.print("   MFR_ID: ");
@@ -78,10 +95,15 @@ void setup()
   Serial.println();
 
   Serial.println();
+  mps28167a.setVout(20000);
   Serial.print("VOUT(mV): ");
   Serial.print(mps28167a.getVout());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.print(mps28167a.getVref());
+  Serial.print("\t\tStatus Register: ");
+  Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
+  Serial.print("\t\tInterrupt Register: ");
+  Serial.println(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
 
   delay(3000);
 }
@@ -89,21 +111,29 @@ void setup()
 
 void loop()
 {
-  mps28167a.setVout(3320);
   Serial.println();
+  mps28167a.setVout(3320);
   Serial.print("VOUT(mV): ");
   Serial.print(mps28167a.getVout());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.print(mps28167a.getVref());
+  Serial.print("\t\tStatus Register: ");
+  Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
+  Serial.print("\t\tInterrupt Register: ");
+  Serial.println(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
 
   delay(3000);
 
-  mps28167a.setVout(5020);
   Serial.println();
+  mps28167a.setVout(5020);
   Serial.print("VOUT(mV): ");
   Serial.print(mps28167a.getVout());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.print(mps28167a.getVref());
+  Serial.print("\t\tStatus Register: ");
+  Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
+  Serial.print("\t\tInterrupt Register: ");
+  Serial.println(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
 
   delay(3000);
 }

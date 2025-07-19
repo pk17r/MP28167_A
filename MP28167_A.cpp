@@ -23,7 +23,15 @@ MP28167_A::MP28167_A(TwoWire *wire)
 
 bool MP28167_A::begin()
 {
-  if (! isConnected()) return false;
+  setR1R2(430, 107);
+  if (! isConnected())
+    return false;
+  // set ALT pin Masks
+  // _writeRegister(MP28167_A_MASK, 0x1F);
+  // set 750kHz Frequency
+  uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
+  ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);
+  _writeRegister(MP28167_A_CTL1, ctrl1_register);
   return true;
 }
 
@@ -40,6 +48,14 @@ void MP28167_A::setR1R2(uint16_t r1, uint16_t r2)
   R1 = r1;
   R2 = r2;
   Vref2VoutMultiplier = (float)(R1 + R2) / R2;
+  vref_min = VOUT_MIN_mV / Vref2VoutMultiplier / 0.8;
+  if(vref_min < VREF_MIN)
+    vref_min = VREF_MIN;
+  vref_max = VOUT_MAX_mV / Vref2VoutMultiplier / 0.8;
+  if(vref_max > VREF_MAX)
+    vref_max = VREF_MAX;
+  // Serial.print("vref_min=");Serial.println(vref_min);
+  // Serial.print("vref_max=");Serial.println(vref_max);
 }
 
 
@@ -60,6 +76,11 @@ float MP28167_A::getVref()
 bool MP28167_A::setVref(float vref_mV)
 {
   uint16_t vref = vref_mV / 0.8;
+  if(vref > vref_max)
+    vref = vref_max;
+  if(vref < vref_min)
+    vref = vref_min;
+  // Serial.print("vref=");Serial.println(vref);
   uint8_t vref_l = (vref & 0x0007);
   uint8_t vref_h = ((vref >> 3) & 0x00ff);
   uint8_t result1 = _writeRegister(MP28167_A_VREF_L, vref_l);
@@ -86,6 +107,25 @@ bool MP28167_A::setVout(uint16_t vout_mV)
 {
   float vref_mv = (float)vout_mV / Vref2VoutMultiplier;
   return setVref(vref_mv);
+}
+
+
+bool MP28167_A::setIoutLimit(float IoutLim)
+{
+  uint8_t ilim_register_val = IoutLim * 20;
+  ilim_register_val = (0x7F & ilim_register_val);
+  uint8_t result = _writeRegister(MP28167_A_IOUT_LIM, ilim_register_val);
+  if(result == 0) return true;
+  return false;
+}
+
+
+float MP28167_A::getIoutLimit()
+{
+  uint8_t ilim_register_val = _readRegister(MP28167_A_IOUT_LIM);
+  ilim_register_val = (0x7F & ilim_register_val);
+  float ilim_A = (float)ilim_register_val * 0.05;
+  return ilim_A;
 }
 
 
