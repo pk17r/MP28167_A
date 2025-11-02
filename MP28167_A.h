@@ -31,10 +31,17 @@
 #define MP28167_A_DEV_ID              0x28
 #define MP28167_A_IC_REV              0x29
 
+#define MP28167_A_CTL1_ENABLE                     0x80
+#define MP28167_A_CTL1_DISABLE                    0x7F
 #define MP28167_A_CTL1_FREQ_500kHz                0x00
 #define MP28167_A_CTL1_FREQ_750kHz                0x04
 #define MP28167_A_CTL1_HICCUP_MODE                0x40
 #define MP28167_A_CTL1_LATCH_OFF_MODE             0x00
+
+#define MP28167_A_STATUS_POWER_GOOD               0x80
+#define MP28167_A_STATUS_CONSTANT_CURRENT         0x10
+
+#define MP28167_A_INTERRUPT_OVER_CURRENT_ENTER    0x20
 
 #define VOUT_MIN_mV         800
 #define VOUT_MAX_mV         20400
@@ -58,10 +65,18 @@ public:
   uint8_t getICRev();            //  should return 0x01 or 1 (decimal)
 
 
+  // Core functions
+  void enable();
+  void disable();
+  bool constantCurrentModeOn();
+  bool powerGood();
+  bool overCurrentProtectionEvent();
+
   uint16_t getVout();
   bool setVout(uint16_t vout_mV);
   float getVref();
   bool setVref(float vref_mV);
+
 
   bool setIoutLimit(float IoutLim);
   float getIoutLimit();

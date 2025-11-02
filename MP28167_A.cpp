@@ -30,7 +30,8 @@ bool MP28167_A::begin()
   // _writeRegister(MP28167_A_MASK, 0x1F);
   // set 750kHz Frequency
   uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
-  ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);
+  ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);   // use 750kHz frequency
+  ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);       // disable
   _writeRegister(MP28167_A_CTL1, ctrl1_register);
   return true;
 }
@@ -63,6 +64,48 @@ void MP28167_A::setR1R2(uint16_t r1, uint16_t r2)
 //
 //  CORE FUNCTIONS
 //
+
+void MP28167_A::enable() {
+  // Serial.print("BEFORE interrupt_register=");Serial.println(_readRegister(MP28167_A_INTERRUPT), BIN);
+  _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
+
+  uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
+  // Serial.print("BEFORE ctrl1_register=");Serial.println(ctrl1_register, BIN);
+  ctrl1_register = (ctrl1_register | MP28167_A_CTL1_ENABLE);
+  _writeRegister(MP28167_A_CTL1, ctrl1_register);
+}
+
+
+void MP28167_A::disable() {
+  uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
+  // Serial.print("BEFORE ctrl1_register=");Serial.println(ctrl1_register, BIN);
+  ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);
+  _writeRegister(MP28167_A_CTL1, ctrl1_register);
+}
+
+
+bool MP28167_A::constantCurrentModeOn() {
+  uint8_t status_register = _readRegister(MP28167_A_STATUS);
+  bool constant_current = ((status_register & MP28167_A_STATUS_CONSTANT_CURRENT) >> 4);
+  return constant_current;
+}
+
+
+bool MP28167_A::powerGood() {
+  uint8_t status_register = _readRegister(MP28167_A_STATUS);
+  bool power_good = ((status_register & MP28167_A_STATUS_POWER_GOOD) >> 7);
+  return power_good;
+}
+
+
+bool MP28167_A::overCurrentProtectionEvent() {
+  uint8_t interrupt_register = _readRegister(MP28167_A_INTERRUPT);
+  _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
+  bool ocp = ((interrupt_register & MP28167_A_INTERRUPT_OVER_CURRENT_ENTER) >> 5);
+  return ocp;
+}
+
+
 float MP28167_A::getVref()
 {
   uint8_t vref_l = _readRegister(MP28167_A_VREF_L);
@@ -75,6 +118,8 @@ float MP28167_A::getVref()
 
 bool MP28167_A::setVref(float vref_mV)
 {
+  _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
+
   uint16_t vref = vref_mV / 0.8;
   if(vref > vref_max)
     vref = vref_max;

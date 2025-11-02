@@ -51,7 +51,7 @@ void setup()
   Serial.print("IOUT LIM(A): ");
   Serial.println(mps28167a.getIoutLimit(), 2);
 
-  float ioutLim_set = 4.0;
+  float ioutLim_set = 0.20;
   Serial.print("Set IoutLim: ");
   Serial.print(ioutLim_set, 2);
   Serial.print("A = ");
@@ -111,6 +111,10 @@ void setup()
 
 void loop()
 {
+  mps28167a.disable();
+  delay(3000);
+
+  mps28167a.enable();
   Serial.println();
   mps28167a.setVout(3320);
   Serial.print("VOUT(mV): ");
@@ -121,6 +125,17 @@ void loop()
   Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
   Serial.print("\t\tInterrupt Register: ");
   Serial.println(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
+
+  Serial.print("VOUT(mV): ");
+  Serial.print(mps28167a.getVout());
+  Serial.print(", powerGood: ");
+  Serial.print(mps28167a.powerGood());
+  Serial.print(", constantCurrentModeOn: ");
+  Serial.print(mps28167a.constantCurrentModeOn());
+  Serial.print(", overCurrentProtectionEvent: ");
+  Serial.println(mps28167a.overCurrentProtectionEvent());
+
+  
 
   delay(3000);
 
@@ -134,6 +149,15 @@ void loop()
   Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
   Serial.print("\t\tInterrupt Register: ");
   Serial.println(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
+
+  Serial.print("VOUT(mV): ");
+  Serial.print(mps28167a.getVout());
+  Serial.print(", powerGood: ");
+  Serial.print(mps28167a.powerGood());
+  Serial.print(", constantCurrentModeOn: ");
+  Serial.print(mps28167a.constantCurrentModeOn());
+  Serial.print(", overCurrentProtectionEvent: ");
+  Serial.println(mps28167a.overCurrentProtectionEvent());
 
   delay(3000);
 }
