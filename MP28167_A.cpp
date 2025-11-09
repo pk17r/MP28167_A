@@ -49,14 +49,6 @@ void MP28167_A::setR1R2(uint16_t r1, uint16_t r2)
   R1 = r1;
   R2 = r2;
   Vref2VoutMultiplier = (float)(R1 + R2) / R2;
-  // vref_min = VOUT_MIN_mV / Vref2VoutMultiplier / 0.8;
-  // if(vref_min < VREF_MIN)
-  //   vref_min = VREF_MIN;
-  // vref_max = VOUT_MAX_mV / Vref2VoutMultiplier / 0.8;
-  // if(vref_max > VREF_MAX)
-  //   vref_max = VREF_MAX;
-  // Serial.print("vref_min=");Serial.println(vref_min);
-  // Serial.print("vref_max=");Serial.println(vref_max);
 }
 
 
@@ -132,11 +124,6 @@ bool MP28167_A::setVref_mV(uint16_t vref_mV)
   else if(vref_register_val > VREF_REG_MAX)
     vref_register_val = VREF_REG_MAX;
 
-  // if(vref_register_val > vref_max)
-  //   vref_register_val = vref_max;
-  // if(vref_register_val < vref_min)
-  //   vref_register_val = vref_min;
-  // Serial.print("vref_register_val=");Serial.println(vref_register_val);
   uint8_t vref_l = (vref_register_val & 0x0007);
   uint8_t vref_h = ((vref_register_val >> 3) & 0x00ff);
   uint8_t result1 = _writeRegister(MP28167_A_VREF_L, vref_l);
@@ -169,9 +156,8 @@ bool MP28167_A::setVout_mV(uint16_t vout_mV)
 bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
 {
   uint8_t ilim_register_val = IoutLim_mA / (uint16_t)50;
-  Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
   ilim_register_val = (0x7F & ilim_register_val);
-  Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
+  // Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
   uint8_t result = _writeRegister(MP28167_A_IOUT_LIM, ilim_register_val);
   if(result == 0) return true;
   return false;

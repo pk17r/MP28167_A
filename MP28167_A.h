@@ -97,8 +97,6 @@ private:
   uint16_t R1 = 430;
   uint16_t R2 = 107;
   float Vref2VoutMultiplier = 5.0187;
-  // uint16_t vref_min = 199;
-  // uint16_t vref_max = 2047;
 };
 
 
