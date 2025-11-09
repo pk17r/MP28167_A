@@ -43,10 +43,12 @@
 
 #define MP28167_A_INTERRUPT_OVER_CURRENT_ENTER    0x20
 
-#define VOUT_MIN_mV         800
-#define VOUT_MAX_mV         20400
-#define VREF_MIN            1
-#define VREF_MAX            2047
+#define VOUT_MIN_mV         1000
+#define VOUT_MAX_mV         20470
+#define VREF_MIN_mV         80
+#define VREF_MAX_mV         1637
+#define VREF_REG_MIN        0
+#define VREF_REG_MAX        2047
 
 class MP28167_A
 {
@@ -72,14 +74,14 @@ public:
   bool powerGood();
   bool overCurrentProtectionEvent();
 
-  uint16_t getVout();
-  bool setVout(uint16_t vout_mV);
-  float getVref();
-  bool setVref(float vref_mV);
+  uint16_t getVout_mV();
+  bool setVout_mV(uint16_t vout_mV);
+  uint16_t getVref_mV();
+  bool setVref_mV(uint16_t vref_mV);
 
 
-  bool setIoutLimit(float IoutLim);
-  float getIoutLimit();
+  bool setIoutLimit_mA(uint16_t IoutLim_mA);
+  uint16_t getIoutLimit_mA();
 
 
   //  DEBUG
@@ -95,8 +97,8 @@ private:
   uint16_t R1 = 430;
   uint16_t R2 = 107;
   float Vref2VoutMultiplier = 5.0187;
-  uint16_t vref_min = 199;
-  uint16_t vref_max = 2047;
+  // uint16_t vref_min = 199;
+  // uint16_t vref_max = 2047;
 };
 
 

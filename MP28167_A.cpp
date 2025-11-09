@@ -49,12 +49,12 @@ void MP28167_A::setR1R2(uint16_t r1, uint16_t r2)
   R1 = r1;
   R2 = r2;
   Vref2VoutMultiplier = (float)(R1 + R2) / R2;
-  vref_min = VOUT_MIN_mV / Vref2VoutMultiplier / 0.8;
-  if(vref_min < VREF_MIN)
-    vref_min = VREF_MIN;
-  vref_max = VOUT_MAX_mV / Vref2VoutMultiplier / 0.8;
-  if(vref_max > VREF_MAX)
-    vref_max = VREF_MAX;
+  // vref_min = VOUT_MIN_mV / Vref2VoutMultiplier / 0.8;
+  // if(vref_min < VREF_MIN)
+  //   vref_min = VREF_MIN;
+  // vref_max = VOUT_MAX_mV / Vref2VoutMultiplier / 0.8;
+  // if(vref_max > VREF_MAX)
+  //   vref_max = VREF_MAX;
   // Serial.print("vref_min=");Serial.println(vref_min);
   // Serial.print("vref_max=");Serial.println(vref_max);
 }
@@ -106,28 +106,39 @@ bool MP28167_A::overCurrentProtectionEvent() {
 }
 
 
-float MP28167_A::getVref()
+uint16_t MP28167_A::getVref_mV()
 {
   uint8_t vref_l = _readRegister(MP28167_A_VREF_L);
   uint8_t vref_h = _readRegister(MP28167_A_VREF_H);
-  uint16_t vref = ((vref_h << 3) | (vref_l & 0x07));
-  float vref_mV = vref * 0.8;
+  uint16_t vref_register_val = ((vref_h << 3) | (vref_l & 0x07));
+  uint16_t vref_mV = vref_register_val * 4 / 5;   // * 0.8
   return vref_mV;
 }
 
 
-bool MP28167_A::setVref(float vref_mV)
+bool MP28167_A::setVref_mV(uint16_t vref_mV)
 {
   _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
 
-  uint16_t vref = vref_mV / 0.8;
-  if(vref > vref_max)
-    vref = vref_max;
-  if(vref < vref_min)
-    vref = vref_min;
-  // Serial.print("vref=");Serial.println(vref);
-  uint8_t vref_l = (vref & 0x0007);
-  uint8_t vref_h = ((vref >> 3) & 0x00ff);
+  if(vref_mV < VREF_MIN_mV)
+    vref_mV = VREF_MIN_mV;
+  else if(vref_mV > VREF_MAX_mV)
+    vref_mV = VREF_MAX_mV;
+
+  uint16_t vref_register_val = vref_mV * 5 / 4;   // / 0.8
+
+  if(vref_register_val < VREF_REG_MIN)
+    vref_register_val = VREF_REG_MIN;
+  else if(vref_register_val > VREF_REG_MAX)
+    vref_register_val = VREF_REG_MAX;
+
+  // if(vref_register_val > vref_max)
+  //   vref_register_val = vref_max;
+  // if(vref_register_val < vref_min)
+  //   vref_register_val = vref_min;
+  // Serial.print("vref_register_val=");Serial.println(vref_register_val);
+  uint8_t vref_l = (vref_register_val & 0x0007);
+  uint8_t vref_h = ((vref_register_val >> 3) & 0x00ff);
   uint8_t result1 = _writeRegister(MP28167_A_VREF_L, vref_l);
   uint8_t result2 = _writeRegister(MP28167_A_VREF_H, vref_h);
   if((result1 | result2) == 0)
@@ -141,36 +152,38 @@ bool MP28167_A::setVref(float vref_mV)
 }
 
 
-uint16_t MP28167_A::getVout()
+uint16_t MP28167_A::getVout_mV()
 {
-  float vref_mV = getVref();
-  return vref_mV * Vref2VoutMultiplier;
+  uint16_t vref_mV = getVref_mV();
+  return (uint16_t)(vref_mV * Vref2VoutMultiplier);
 }
 
 
-bool MP28167_A::setVout(uint16_t vout_mV)
+bool MP28167_A::setVout_mV(uint16_t vout_mV)
 {
   float vref_mv = (float)vout_mV / Vref2VoutMultiplier;
-  return setVref(vref_mv);
+  return setVref_mV(vref_mv);
 }
 
 
-bool MP28167_A::setIoutLimit(float IoutLim)
+bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
 {
-  uint8_t ilim_register_val = IoutLim * 20;
+  uint8_t ilim_register_val = IoutLim_mA / (uint16_t)50;
+  Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
   ilim_register_val = (0x7F & ilim_register_val);
+  Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
   uint8_t result = _writeRegister(MP28167_A_IOUT_LIM, ilim_register_val);
   if(result == 0) return true;
   return false;
 }
 
 
-float MP28167_A::getIoutLimit()
+uint16_t MP28167_A::getIoutLimit_mA()
 {
   uint8_t ilim_register_val = _readRegister(MP28167_A_IOUT_LIM);
   ilim_register_val = (0x7F & ilim_register_val);
-  float ilim_A = (float)ilim_register_val * 0.05;
-  return ilim_A;
+  uint16_t ilim_mA = (uint16_t)ilim_register_val * 50;
+  return ilim_mA;
 }
 
 

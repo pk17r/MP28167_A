@@ -9,7 +9,7 @@ MP28167_A	KEYWORD1
 begin	KEYWORD2
 isConnected	KEYWORD2
 
-getVout	KEYWORD2
-setVout	KEYWORD2
-getVref	KEYWORD2
-setVref	KEYWORD2
+getVout_mV	KEYWORD2
+setVout_mV	KEYWORD2
+getVref_mV	KEYWORD2
+setVref_mV	KEYWORD2

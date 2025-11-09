@@ -79,9 +79,9 @@ void setup()
 
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout());
+  Serial.print(mps28167a.getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.println(mps28167a.getVref_mV());
 
   delay(3000);
 }
@@ -89,21 +89,21 @@ void setup()
 
 void loop()
 {
-  mps28167a.setVout(3320);
+  mps28167a.setVout_mV(3320);
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout());
+  Serial.print(mps28167a.getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.println(mps28167a.getVref_mV());
 
   delay(3000);
 
-  mps28167a.setVout(5020);
+  mps28167a.setVout_mV(5020);
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout());
+  Serial.print(mps28167a.getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref());
+  Serial.println(mps28167a.getVref_mV());
 
   delay(3000);
 }
