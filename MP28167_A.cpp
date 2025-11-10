@@ -21,46 +21,46 @@ MP28167_A::MP28167_A(TwoWire *wire)
 }
 
 
-bool MP28167_A::begin()
+bool MP28167_A::MP28167_A_begin()
 {
-  if (! isConnected())
+  if (! MP28167_A_isConnected())
     return false;
   // set ALT pin Masks
   // _writeRegister(MP28167_A_MASK, 0x1F);
 
-  // set 750kHz Frequency and disable converter
+  // set 750kHz Frequency and MP28167_A_disable converter
   // uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
   // ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);   // use 750kHz frequency
-  // ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);       // disable
+  // ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);       // MP28167_A_disable
   _writeRegister(MP28167_A_CTL1, 0x74);   // 0x74 = b01110100 = CTL1 Register = EN / OCP-OVP-HICCUP_LATCH-OFF / DISCHG_EN / MODE_Forced-PWM_Auto-PFM-PWM / FREQ_00-500kHz_01-750kHz / 00_Reserved
-  // set Vout to 1V after disable - good practice
-  setVout_mV(1000);
+  // set Vout to 1V after MP28167_A_disable - good practice
+  MP28167_A_setVout_mV(1000);
   return true;
 }
 
 
-bool MP28167_A::isConnected()
+bool MP28167_A::MP28167_A_isConnected()
 {
   _wire->beginTransmission(MP28167_A_I2C_ADDRESS);
   return ( _wire->endTransmission() == 0);
 }
 
 
-void MP28167_A::setR1R2_kOhms(uint16_t r1, uint16_t r2)
+void MP28167_A::MP28167_A_setR1R2_kOhms(uint16_t r1, uint16_t r2)
 {
-  R1 = r1;
-  R2 = r2;
+  MP28167_A_R1 = r1;
+  MP28167_A_R2 = r2;
 }
 
-uint16_t MP28167_A::VoutToVref_mV(uint16_t Vout_mV)
+uint16_t MP28167_A::MP28167_A_VoutToVref_mV(uint16_t Vout_mV)
 {
-  return (uint16_t)(((uint32_t)Vout_mV * (uint32_t)R2) / (uint32_t)(R1 + R2));
+  return (uint16_t)(((uint32_t)Vout_mV * (uint32_t)MP28167_A_R2) / (uint32_t)(MP28167_A_R1 + MP28167_A_R2));
 }
 
 
-uint16_t MP28167_A::VrefToVout_mV(uint16_t Vref_mV)
+uint16_t MP28167_A::MP28167_A_VrefToVout_mV(uint16_t Vref_mV)
 {
-  return (uint16_t)(((uint32_t)Vref_mV * (uint32_t)(R1 + R2)) / (uint32_t)R2);
+  return (uint16_t)(((uint32_t)Vref_mV * (uint32_t)(MP28167_A_R1 + MP28167_A_R2)) / (uint32_t)MP28167_A_R2);
 }
 
 
@@ -69,7 +69,7 @@ uint16_t MP28167_A::VrefToVout_mV(uint16_t Vref_mV)
 //  CORE FUNCTIONS
 //
 
-void MP28167_A::enable() {
+void MP28167_A::MP28167_A_enable() {
   // Serial.print("BEFORE interrupt_register=");Serial.println(_readRegister(MP28167_A_INTERRUPT), BIN);
   _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
 
@@ -80,31 +80,31 @@ void MP28167_A::enable() {
 }
 
 
-void MP28167_A::disable() {
+void MP28167_A::MP28167_A_disable() {
   uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
   // Serial.print("BEFORE ctrl1_register=");Serial.println(ctrl1_register, BIN);
   ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);
   _writeRegister(MP28167_A_CTL1, ctrl1_register);
-  // set Vout to 1V after disable - good practice
-  setVout_mV(1000);
+  // set Vout to 1V after MP28167_A_disable - good practice
+  MP28167_A_setVout_mV(1000);
 }
 
 
-bool MP28167_A::constantCurrentModeOn() {
+bool MP28167_A::MP28167_A_CCMode() {
   uint8_t status_register = _readRegister(MP28167_A_STATUS);
   bool constant_current = ((status_register & MP28167_A_STATUS_CONSTANT_CURRENT) >> 4);
   return constant_current;
 }
 
 
-bool MP28167_A::powerGood() {
+bool MP28167_A::MP28167_A_PG() {
   uint8_t status_register = _readRegister(MP28167_A_STATUS);
   bool power_good = ((status_register & MP28167_A_STATUS_POWER_GOOD) >> 7);
   return power_good;
 }
 
 
-bool MP28167_A::overCurrentProtectionEvent() {
+bool MP28167_A::MP28167_A_OCP() {
   uint8_t interrupt_register = _readRegister(MP28167_A_INTERRUPT);
   _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
   bool ocp = ((interrupt_register & MP28167_A_INTERRUPT_OVER_CURRENT_ENTER) >> 5);
@@ -112,7 +112,7 @@ bool MP28167_A::overCurrentProtectionEvent() {
 }
 
 
-uint16_t MP28167_A::getVref_mV()
+uint16_t MP28167_A::MP28167_A_getVref_mV()
 {
   uint8_t vref_l = _readRegister(MP28167_A_VREF_L);
   uint8_t vref_h = _readRegister(MP28167_A_VREF_H);
@@ -122,7 +122,7 @@ uint16_t MP28167_A::getVref_mV()
 }
 
 
-bool MP28167_A::setVref_mV(uint16_t vref_mV)
+bool MP28167_A::MP28167_A_setVref_mV(uint16_t vref_mV)
 {
   _writeRegister(MP28167_A_INTERRUPT, 0xFF);  // clear previous interrupts
 
@@ -153,26 +153,26 @@ bool MP28167_A::setVref_mV(uint16_t vref_mV)
 }
 
 
-uint16_t MP28167_A::getVout_mV()
+uint16_t MP28167_A::MP28167_A_getVout_mV()
 {
-  return VrefToVout_mV(getVref_mV());
+  return MP28167_A_VrefToVout_mV(MP28167_A_getVref_mV());
 }
 
 
-bool MP28167_A::setVout_mV(uint16_t vout_mV)
+bool MP28167_A::MP28167_A_setVout_mV(uint16_t vout_mV)
 {
-  return setVref_mV(VoutToVref_mV(vout_mV));
+  return MP28167_A_setVref_mV(MP28167_A_VoutToVref_mV(vout_mV));
 }
 
 
-bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
+bool MP28167_A::MP28167_A_setILim_mA(uint16_t IoutLim_mA)
 {
   uint8_t ilim_register_val_desired = IoutLim_mA / (uint16_t)50;
   ilim_register_val_desired = (0x7F & ilim_register_val_desired);
   // Serial.print("ilim_register_val_desired=");Serial.println(ilim_register_val_desired);
 
   // read current IoutLimit
-  uint8_t ilim_register_val_current = getIoutLimitRegisterVal();
+  uint8_t ilim_register_val_current = MP28167_A_getILimReg();
 
   // increase or decrease step by step
   while (ilim_register_val_current != ilim_register_val_desired)
@@ -183,7 +183,7 @@ bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
     if(result != 0)
       return false;
     // read current IoutLimit
-    ilim_register_val_current = getIoutLimitRegisterVal();
+    ilim_register_val_current = MP28167_A_getILimReg();
   }
 
   // Serial.print("ilim_register_val_current=");Serial.println(ilim_register_val_current);
@@ -191,13 +191,13 @@ bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
 }
 
 
-uint16_t MP28167_A::getIoutLimit_mA()
+uint16_t MP28167_A::MP28167_A_getILim_mA()
 {
-  return (((uint16_t)getIoutLimitRegisterVal()) * (uint16_t)50);
+  return (((uint16_t)MP28167_A_getILimReg()) * (uint16_t)50);
 }
 
 
-uint8_t MP28167_A::getIoutLimitRegisterVal()
+uint8_t MP28167_A::MP28167_A_getILimReg()
 {
   return (0x7F & _readRegister(MP28167_A_IOUT_LIM));
 }

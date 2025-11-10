@@ -55,30 +55,30 @@ class MP28167_A
 public:
   explicit MP28167_A(TwoWire *wire = &Wire);
 
-  bool     begin();
-  bool     isConnected();
-  void     setR1R2_kOhms(uint16_t r1, uint16_t r2);
+  bool     MP28167_A_begin();
+  bool     MP28167_A_isConnected();
+  void     MP28167_A_setR1R2_kOhms(uint16_t r1, uint16_t r2);
 
 
   // Core functions
-  void enable();
-  void disable();
-  bool constantCurrentModeOn();
-  bool powerGood();
-  bool overCurrentProtectionEvent();
+  void MP28167_A_enable();
+  void MP28167_A_disable();
+  bool MP28167_A_CCMode();
+  bool MP28167_A_PG();
+  bool MP28167_A_OCP();
 
-  uint16_t getVout_mV();
-  bool setVout_mV(uint16_t vout_mV);
-  uint16_t getVref_mV();
-  bool setVref_mV(uint16_t vref_mV);
+  uint16_t MP28167_A_getVout_mV();
+  bool MP28167_A_setVout_mV(uint16_t vout_mV);
+  uint16_t MP28167_A_getVref_mV();
+  bool MP28167_A_setVref_mV(uint16_t vref_mV);
 
 
-  bool setIoutLimit_mA(uint16_t IoutLim_mA);
-  uint16_t getIoutLimit_mA();
+  bool MP28167_A_setILim_mA(uint16_t IoutLim_mA);
+  uint16_t MP28167_A_getILim_mA();
 
 
   //  DEBUG
-  uint8_t getRegister(uint8_t reg)  { return _readRegister(reg); };
+  uint8_t MP28167_A_getRegister(uint8_t reg)  { return _readRegister(reg); };
 
 
 private:
@@ -86,14 +86,14 @@ private:
   uint8_t _readRegister(uint8_t reg);
   uint8_t _writeRegister(uint8_t reg, uint8_t value);
 
-  uint16_t VoutToVref_mV(uint16_t Vout_mV);
-  uint16_t VrefToVout_mV(uint16_t Vref_mV);
+  uint16_t MP28167_A_VoutToVref_mV(uint16_t Vout_mV);
+  uint16_t MP28167_A_VrefToVout_mV(uint16_t Vref_mV);
 
-  uint8_t getIoutLimitRegisterVal();
+  uint8_t MP28167_A_getILimReg();
 
   TwoWire * _wire;
-  uint16_t R1 = 430;
-  uint16_t R2 = 107;
+  uint16_t MP28167_A_R1 = 430;
+  uint16_t MP28167_A_R2 = 107;
 };
 
 

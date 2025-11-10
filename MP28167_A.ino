@@ -55,16 +55,16 @@ void setup()
   Serial.println(MP28167_A_LIB_VERSION);
 
   Wire.begin();
-  if (!mps28167a.begin() )
+  if (!mps28167a.MP28167_A_begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");
     exit(1);
   }
-  mps28167a.setR1R2_kOhms(430, 107);    // in kOhm
+  mps28167a.MP28167_A_setR1R2_kOhms(430, 107);    // in kOhm
 
-  mps28167a.setIoutLimit_mA(300 /*mA*/);
+  mps28167a.MP28167_A_setILim_mA(300 /*mA*/);
   Serial.print("IOUT LIM(mA): ");
-  Serial.println(mps28167a.getIoutLimit_mA());
+  Serial.println(mps28167a.MP28167_A_getILim_mA());
 
   Serial.println("\n\tREGISTER\tVAL_HEX\tVAL_BIN");
   for (int r = 0; r < kRegistersCount; r++)
@@ -74,7 +74,7 @@ void setup()
     Serial.print(" : ");
     Serial.print(kRegisterNames[r]);
     Serial.print('\t');
-    uint8_t reg_val = mps28167a.getRegister(kRegisterIds[r]);
+    uint8_t reg_val = mps28167a.MP28167_A_getRegister(kRegisterIds[r]);
     Serial.print(reg_val, HEX);
     Serial.print('\t');
     Serial.println(reg_val, BIN);
@@ -86,49 +86,49 @@ void printsPerLine()
 {
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout_mV());
+  Serial.print(mps28167a.MP28167_A_getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.print(mps28167a.getVref_mV());
+  Serial.print(mps28167a.MP28167_A_getVref_mV());
   Serial.print("  Status:");
-  Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
+  Serial.print(mps28167a.MP28167_A_getRegister(MP28167_A_STATUS), BIN);
   Serial.print("  Interrupt:");
-  Serial.print(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
-  if(mps28167a.powerGood())
+  Serial.print(mps28167a.MP28167_A_getRegister(MP28167_A_INTERRUPT), BIN);
+  if(mps28167a.MP28167_A_PG())
     Serial.print("  PG");
-  if(mps28167a.constantCurrentModeOn())
+  if(mps28167a.MP28167_A_CCMode())
     Serial.print("  CC");
-  if(mps28167a.overCurrentProtectionEvent())
+  if(mps28167a.MP28167_A_OCP())
     Serial.print("  OCP");
 }
 
 void loop()
 {
-  mps28167a.disable();
+  mps28167a.MP28167_A_disable();
   printsPerLine();
   delay(delay_ms/2);
   printsPerLine();
   delay(delay_ms/2);
 
-  mps28167a.enable();
-  mps28167a.setVout_mV(1000);
+  mps28167a.MP28167_A_enable();
+  mps28167a.MP28167_A_setVout_mV(1000);
   printsPerLine();
   delay(delay_ms/2);
   printsPerLine();
   delay(delay_ms/2);
 
-  mps28167a.setVout_mV(3320);
+  mps28167a.MP28167_A_setVout_mV(3320);
   printsPerLine();
   delay(delay_ms/2);
   printsPerLine();
   delay(delay_ms/2);
 
-  mps28167a.setVout_mV(5020);
+  mps28167a.MP28167_A_setVout_mV(5020);
   printsPerLine();
   delay(delay_ms/2);
   printsPerLine();
   delay(delay_ms/2);
 
-  mps28167a.setVout_mV(15020);
+  mps28167a.MP28167_A_setVout_mV(15020);
   printsPerLine();
   delay(delay_ms/2);
   printsPerLine();

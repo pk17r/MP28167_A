@@ -20,28 +20,28 @@ char names[6][20] =
   "     CTL2: "
 };
 
-const uint16_t R1 = 430;
-const uint16_t R2 = 107;
+const uint16_t MP28167_A_R1 = 430;
+const uint16_t MP28167_A_R2 = 107;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.MP28167_A_begin(115200);
   Serial.println(__FILE__);
   Serial.print("MP28167_A_LIB_VERSION: ");
   Serial.println(MP28167_A_LIB_VERSION);
 
-  Wire.begin();
-  if (!mps28167a.begin() )
+  Wire.MP28167_A_begin();
+  if (!mps28167a.MP28167_A_begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");
   }
 
-  Serial.print("\nSet R1: ");
-  Serial.print(R1);
-  Serial.print("kOhm, R2: ");
-  Serial.print(R2);
+  Serial.print("\nSet MP28167_A_R1: ");
+  Serial.print(MP28167_A_R1);
+  Serial.print("kOhm, MP28167_A_R2: ");
+  Serial.print(MP28167_A_R2);
   Serial.println("kOhm");
-  mps28167a.setR1R2_kOhms(R1, R2);
+  mps28167a.MP28167_A_setR1R2_kOhms(MP28167_A_R1, MP28167_A_R2);
 
   delay(1000);
 
@@ -69,17 +69,17 @@ void setup()
     Serial.print('\t');
     Serial.print(names[r]);
     Serial.print('\t');
-    Serial.print(mps28167a.getRegister(r), HEX);
+    Serial.print(mps28167a.MP28167_A_getRegister(r), HEX);
     Serial.print('\t');
-    Serial.println(mps28167a.getRegister(r), BIN);
+    Serial.println(mps28167a.MP28167_A_getRegister(r), BIN);
   }
   Serial.println();
 
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout_mV());
+  Serial.print(mps28167a.MP28167_A_getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref_mV());
+  Serial.println(mps28167a.MP28167_A_getVref_mV());
 
   delay(3000);
 }
@@ -87,21 +87,21 @@ void setup()
 
 void loop()
 {
-  mps28167a.setVout_mV(3320);
+  mps28167a.MP28167_A_setVout_mV(3320);
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout_mV());
+  Serial.print(mps28167a.MP28167_A_getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref_mV());
+  Serial.println(mps28167a.MP28167_A_getVref_mV());
 
   delay(3000);
 
-  mps28167a.setVout_mV(5020);
+  mps28167a.MP28167_A_setVout_mV(5020);
   Serial.println();
   Serial.print("VOUT(mV): ");
-  Serial.print(mps28167a.getVout_mV());
+  Serial.print(mps28167a.MP28167_A_getVout_mV());
   Serial.print(", VREF(mV): ");
-  Serial.println(mps28167a.getVref_mV());
+  Serial.println(mps28167a.MP28167_A_getVref_mV());
 
   delay(3000);
 }
