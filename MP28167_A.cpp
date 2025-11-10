@@ -23,7 +23,6 @@ MP28167_A::MP28167_A(TwoWire *wire)
 
 bool MP28167_A::begin()
 {
-  setR1R2(430, 107);
   if (! isConnected())
     return false;
   // set ALT pin Masks
@@ -44,11 +43,21 @@ bool MP28167_A::isConnected()
 }
 
 
-void MP28167_A::setR1R2(uint16_t r1, uint16_t r2)
+void MP28167_A::setR1R2_kOhms(uint16_t r1, uint16_t r2)
 {
   R1 = r1;
   R2 = r2;
-  Vref2VoutMultiplier = (float)(R1 + R2) / R2;
+}
+
+uint16_t MP28167_A::VoutToVref_mV(uint16_t Vout_mV)
+{
+  return (uint16_t)(((uint32_t)Vout_mV * (uint32_t)R2) / (uint32_t)(R1 + R2));
+}
+
+
+uint16_t MP28167_A::VrefToVout_mV(uint16_t Vref_mV)
+{
+  return (uint16_t)(((uint32_t)Vref_mV * (uint32_t)(R1 + R2)) / (uint32_t)R2);
 }
 
 
@@ -141,15 +150,13 @@ bool MP28167_A::setVref_mV(uint16_t vref_mV)
 
 uint16_t MP28167_A::getVout_mV()
 {
-  uint16_t vref_mV = getVref_mV();
-  return (uint16_t)(vref_mV * Vref2VoutMultiplier);
+  return VrefToVout_mV(getVref_mV());
 }
 
 
 bool MP28167_A::setVout_mV(uint16_t vout_mV)
 {
-  float vref_mv = (float)vout_mV / Vref2VoutMultiplier;
-  return setVref_mV(vref_mv);
+  return setVref_mV(VoutToVref_mV(vout_mV));
 }
 
 
@@ -181,17 +188,13 @@ bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
 
 uint16_t MP28167_A::getIoutLimit_mA()
 {
-  uint8_t ilim_register_val = getIoutLimitRegisterVal();
-  uint16_t ilim_mA = (uint16_t)ilim_register_val * 50;
-  return ilim_mA;
+  return (((uint16_t)getIoutLimitRegisterVal()) * (uint16_t)50);
 }
 
 
 uint8_t MP28167_A::getIoutLimitRegisterVal()
 {
-  uint8_t ilim_register_val = _readRegister(MP28167_A_IOUT_LIM);
-  ilim_register_val = (0x7F & ilim_register_val);
-  return ilim_register_val;
+  return (0x7F & _readRegister(MP28167_A_IOUT_LIM));
 }
 
 

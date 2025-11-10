@@ -57,8 +57,7 @@ public:
 
   bool     begin();
   bool     isConnected();
-  void     setR1R2(uint16_t r1, uint16_t r2);
-  float    getVref2VoutMultiplier() { return Vref2VoutMultiplier; }
+  void     setR1R2_kOhms(uint16_t r1, uint16_t r2);
 
 
   //  Meta information
@@ -82,7 +81,6 @@ public:
 
   bool setIoutLimit_mA(uint16_t IoutLim_mA);
   uint16_t getIoutLimit_mA();
-  uint8_t getIoutLimitRegisterVal();
 
 
   //  DEBUG
@@ -94,10 +92,14 @@ private:
   uint8_t _readRegister(uint8_t reg);
   uint8_t _writeRegister(uint8_t reg, uint8_t value);
 
+  uint16_t VoutToVref_mV(uint16_t Vout_mV);
+  uint16_t VrefToVout_mV(uint16_t Vref_mV);
+
+  uint8_t getIoutLimitRegisterVal();
+
   TwoWire * _wire;
   uint16_t R1 = 430;
   uint16_t R2 = 107;
-  float Vref2VoutMultiplier = 5.0187;
 };
 
 

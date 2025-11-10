@@ -41,10 +41,8 @@ void setup()
   Serial.print("kOhm, R2: ");
   Serial.print(R2);
   Serial.println("kOhm");
-  mps28167a.setR1R2(R1, R2);
+  mps28167a.setR1R2_kOhms(R1, R2);
 
-  Serial.print("\nVref2VoutMultiplier: ");
-  Serial.println(mps28167a.getVref2VoutMultiplier());
   delay(1000);
 
   Serial.println("\n\tREGISTER\tVALUE_X\tVALUE_BIN");

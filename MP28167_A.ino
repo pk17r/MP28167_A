@@ -37,8 +37,8 @@ const uint8_t kRegisterIds[kRegistersCount] =
 };
 
 
-const uint16_t R1 = 430;
-const uint16_t R2 = 107;
+const uint16_t R1 = 430;    // in kOhm
+const uint16_t R2 = 107;    // in kOhm
 
 const uint16_t delay_ms = 3000;
 
@@ -67,10 +67,8 @@ void setup()
   Serial.print("kOhm, R2: ");
   Serial.print(R2);
   Serial.println("kOhm");
-  mps28167a.setR1R2(R1, R2);
+  mps28167a.setR1R2_kOhms(R1, R2);
 
-  Serial.print("\nVref2VoutMultiplier: ");
-  Serial.println(mps28167a.getVref2VoutMultiplier());
   delay(delay_ms);
 
   Serial.println();

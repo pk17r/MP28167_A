@@ -43,12 +43,11 @@ Note: one needs to set **Wire.begin()** before calling **begin()**.
 
 ### Core Functions
 
-- **void     setR1R2(uint16_t r1, uint16_t r2)** set Feedback pin resistors R1, R2.
-- **float    getVref2VoutMultiplier()** get Vref2VoutMultiplier from: Vout = Vref * Vref2VoutMultiplier.
+- **void     setR1R2_kOhms(uint16_t r1, uint16_t r2)** set Feedback pin resistors R1, R2 in kOhms.
 - **uint16_t getVout_mV()** get the set Vout Voltage in mV.
 - **bool setVout_mV(uint16_t vout_mV)** set the desired Vout Voltage in mV.
-- **float getVref_mV()** 
-- **bool setVref_mV(float vref_mV)** 
+- **uint16_t getVref_mV()** 
+- **bool setVref_mV(uint16_t vref_mV)** 
 
 
 ## Support
