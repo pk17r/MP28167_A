@@ -82,6 +82,7 @@ public:
 
   bool setIoutLimit_mA(uint16_t IoutLim_mA);
   uint16_t getIoutLimit_mA();
+  uint8_t getIoutLimitRegisterVal();
 
 
   //  DEBUG

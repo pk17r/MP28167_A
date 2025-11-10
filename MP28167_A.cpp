@@ -155,21 +155,43 @@ bool MP28167_A::setVout_mV(uint16_t vout_mV)
 
 bool MP28167_A::setIoutLimit_mA(uint16_t IoutLim_mA)
 {
-  uint8_t ilim_register_val = IoutLim_mA / (uint16_t)50;
-  ilim_register_val = (0x7F & ilim_register_val);
-  // Serial.print("ilim_register_val=");Serial.println(ilim_register_val);
-  uint8_t result = _writeRegister(MP28167_A_IOUT_LIM, ilim_register_val);
-  if(result == 0) return true;
-  return false;
+  uint8_t ilim_register_val_desired = IoutLim_mA / (uint16_t)50;
+  ilim_register_val_desired = (0x7F & ilim_register_val_desired);
+  // Serial.print("ilim_register_val_desired=");Serial.println(ilim_register_val_desired);
+
+  // read current IoutLimit
+  uint8_t ilim_register_val_current = getIoutLimitRegisterVal();
+
+  // increase or decrease step by step
+  while (ilim_register_val_current != ilim_register_val_desired)
+  {
+    uint8_t ilim_register_val_new = (ilim_register_val_current > ilim_register_val_desired ? (ilim_register_val_current - 1) : (ilim_register_val_current + 1));
+    uint8_t result = _writeRegister(MP28167_A_IOUT_LIM, ilim_register_val_desired);
+    // return if unsuccessful write
+    if(result != 0)
+      return false;
+    // read current IoutLimit
+    ilim_register_val_current = getIoutLimitRegisterVal();
+  }
+
+  // Serial.print("ilim_register_val_current=");Serial.println(ilim_register_val_current);
+  return true;
 }
 
 
 uint16_t MP28167_A::getIoutLimit_mA()
 {
-  uint8_t ilim_register_val = _readRegister(MP28167_A_IOUT_LIM);
-  ilim_register_val = (0x7F & ilim_register_val);
+  uint8_t ilim_register_val = getIoutLimitRegisterVal();
   uint16_t ilim_mA = (uint16_t)ilim_register_val * 50;
   return ilim_mA;
+}
+
+
+uint8_t MP28167_A::getIoutLimitRegisterVal()
+{
+  uint8_t ilim_register_val = _readRegister(MP28167_A_IOUT_LIM);
+  ilim_register_val = (0x7F & ilim_register_val);
+  return ilim_register_val;
 }
 
 

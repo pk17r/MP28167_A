@@ -10,15 +10,32 @@
 
 MP28167_A mps28167a;
 
-char names[6][20] =
+const uint8_t kRegistersCount = 9;
+const char kRegisterNames[kRegistersCount][20] =
 {
   "   VREF_L: ",
   "   VREF_H: ",
   "  VREF_GO: ",
   " IOUT_LIM: ",
   "     CTL1: ",
-  "     CTL2: "
+  "     CTL2: ",
+  "   STATUS: ",
+  "INTERRUPT: ",
+  "     MASK: "
 };
+const uint8_t kRegisterIds[kRegistersCount] =
+{
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  9,
+  0x0A,
+  0x0B
+};
+
 
 const uint16_t R1 = 430;
 const uint16_t R2 = 107;
@@ -27,15 +44,22 @@ const uint16_t delay_ms = 3000;
 
 void setup()
 {
+  Wire.begin();
+  bool setup_success = true;
+  if (!mps28167a.begin() )
+  {
+    setup_success = false;
+  }
+  mps28167a.setVout_mV(1000);
+
   Serial.begin(115200);
   Serial.println(__FILE__);
   Serial.print("MP28167_A_LIB_VERSION: ");
   Serial.println(MP28167_A_LIB_VERSION);
 
-  Wire.begin();
-  if (!mps28167a.begin() )
-  {
+  if(!setup_success) {
     Serial.println("Could not connect. Fix and Reboot");
+    exit(1);
   }
 
   Serial.print("\nSet R1: ");
@@ -66,7 +90,7 @@ void setup()
 
   delay(delay_ms);
 
-  Serial.println("\n\tREGISTER\tVALUE_X\tVALUE_BIN");
+  Serial.println("\n\tREGISTER\tVALUE_HEX\tVALUE_BIN");
   Serial.print('\t');
   Serial.print("   MFR_ID: ");
   Serial.print('\t');
@@ -85,19 +109,22 @@ void setup()
   Serial.print(mps28167a.getICRev(), HEX);
   Serial.print('\t');
   Serial.println(mps28167a.getICRev(), BIN);
-  for (int r = 0; r < 6; r++)
+  for (int r = 0; r < kRegistersCount; r++)
   {
+    Serial.print("0x");
+    Serial.print(kRegisterIds[r], HEX);
+    Serial.print(" : ");
+    Serial.print(kRegisterNames[r]);
     Serial.print('\t');
-    Serial.print(names[r]);
+    uint8_t reg_val = mps28167a.getRegister(kRegisterIds[r]);
+    Serial.print(reg_val, HEX);
     Serial.print('\t');
-    Serial.print(mps28167a.getRegister(r), HEX);
-    Serial.print('\t');
-    Serial.println(mps28167a.getRegister(r), BIN);
+    Serial.println(reg_val, BIN);
   }
   Serial.println();
 
   Serial.println();
-  mps28167a.setVout_mV(20000);
+  mps28167a.setVout_mV(6000);
   Serial.print("VOUT(mV): ");
   Serial.print(mps28167a.getVout_mV());
   Serial.print(", VREF(mV): ");
