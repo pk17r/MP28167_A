@@ -55,25 +55,25 @@ class MP28167_A
 public:
   explicit MP28167_A(TwoWire *wire = &Wire);
 
-  bool     MP28167_A_begin();
-  bool     MP28167_A_isConnected();
+  uint8_t     MP28167_A_begin();
+  uint8_t     MP28167_A_isConnected();
   void     MP28167_A_setR1R2_kOhms(uint16_t r1, uint16_t r2);
 
 
   // Core functions
   void MP28167_A_enable();
   void MP28167_A_disable();
-  bool MP28167_A_CCMode();
-  bool MP28167_A_PG();
-  bool MP28167_A_OCP();
+  uint8_t MP28167_A_CCMode();
+  uint8_t MP28167_A_PG();
+  uint8_t MP28167_A_OCP();
 
   uint16_t MP28167_A_getVout_mV();
-  bool MP28167_A_setVout_mV(uint16_t vout_mV);
+  uint8_t MP28167_A_setVout_mV(uint16_t vout_mV);
   uint16_t MP28167_A_getVref_mV();
-  bool MP28167_A_setVref_mV(uint16_t vref_mV);
+  uint8_t MP28167_A_setVref_mV(uint16_t vref_mV);
 
 
-  bool MP28167_A_setILim_mA(uint16_t IoutLim_mA);
+  uint8_t MP28167_A_setILim_mA(uint16_t IoutLim_mA);
   uint16_t MP28167_A_getILim_mA();
 
 
