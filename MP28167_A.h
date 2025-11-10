@@ -60,12 +60,6 @@ public:
   void     setR1R2_kOhms(uint16_t r1, uint16_t r2);
 
 
-  //  Meta information
-  uint8_t getManufacturerID();   //  should return 0x09 or 9 (decimal)
-  uint8_t getDeviceID();            //  should return 0x58 or 88 (decimal)
-  uint8_t getICRev();            //  should return 0x01 or 1 (decimal)
-
-
   // Core functions
   void enable();
   void disable();

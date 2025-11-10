@@ -27,11 +27,14 @@ bool MP28167_A::begin()
     return false;
   // set ALT pin Masks
   // _writeRegister(MP28167_A_MASK, 0x1F);
-  // set 750kHz Frequency
-  uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
-  ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);   // use 750kHz frequency
-  ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);       // disable
-  _writeRegister(MP28167_A_CTL1, ctrl1_register);
+
+  // set 750kHz Frequency and disable converter
+  // uint8_t ctrl1_register = _readRegister(MP28167_A_CTL1);
+  // ctrl1_register = (ctrl1_register | MP28167_A_CTL1_FREQ_750kHz);   // use 750kHz frequency
+  // ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);       // disable
+  _writeRegister(MP28167_A_CTL1, 0x74);   // 0x74 = b01110100 = CTL1 Register = EN / OCP-OVP-HICCUP_LATCH-OFF / DISCHG_EN / MODE_Forced-PWM_Auto-PFM-PWM / FREQ_00-500kHz_01-750kHz / 00_Reserved
+  // set Vout to 1V after disable - good practice
+  setVout_mV(1000);
   return true;
 }
 
@@ -82,6 +85,8 @@ void MP28167_A::disable() {
   // Serial.print("BEFORE ctrl1_register=");Serial.println(ctrl1_register, BIN);
   ctrl1_register = (ctrl1_register & MP28167_A_CTL1_DISABLE);
   _writeRegister(MP28167_A_CTL1, ctrl1_register);
+  // set Vout to 1V after disable - good practice
+  setVout_mV(1000);
 }
 
 
@@ -197,27 +202,6 @@ uint8_t MP28167_A::getIoutLimitRegisterVal()
   return (0x7F & _readRegister(MP28167_A_IOUT_LIM));
 }
 
-
-////////////////////////////////////////////////////////
-//
-//  META INFORMATION
-//
-uint8_t MP28167_A::getManufacturerID()
-{
-  return _readRegister(MP28167_A_MFR_ID);
-}
-
-
-uint8_t MP28167_A::getDeviceID()
-{
-  return _readRegister(MP28167_A_DEV_ID);
-}
-
-
-uint8_t MP28167_A::getICRev()
-{
-  return _readRegister(MP28167_A_IC_REV);
-}
 
 
 ////////////////////////////////////////////////////////
