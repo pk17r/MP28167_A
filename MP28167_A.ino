@@ -93,9 +93,7 @@ void printsPerLine()
   Serial.print(mps28167a.getRegister(MP28167_A_STATUS), BIN);
   Serial.print("  Interrupt:");
   Serial.print(mps28167a.getRegister(MP28167_A_INTERRUPT), BIN);
-  if(!mps28167a.powerGood())
-    Serial.print("  PowerNotGood");
-  else
+  if(mps28167a.powerGood())
     Serial.print("  PG");
   if(mps28167a.constantCurrentModeOn())
     Serial.print("  CC");
@@ -107,29 +105,34 @@ void loop()
 {
   mps28167a.disable();
   printsPerLine();
-
-  delay(delay_ms);
+  delay(delay_ms/2);
+  printsPerLine();
+  delay(delay_ms/2);
 
   mps28167a.enable();
   mps28167a.setVout_mV(1000);
   printsPerLine();
-
-  delay(delay_ms);
+  delay(delay_ms/2);
+  printsPerLine();
+  delay(delay_ms/2);
 
   mps28167a.setVout_mV(3320);
   printsPerLine();
-
-  delay(delay_ms);
+  delay(delay_ms/2);
+  printsPerLine();
+  delay(delay_ms/2);
 
   mps28167a.setVout_mV(5020);
   printsPerLine();
-
-  delay(delay_ms);
+  delay(delay_ms/2);
+  printsPerLine();
+  delay(delay_ms/2);
 
   mps28167a.setVout_mV(15020);
   printsPerLine();
-
-  delay(delay_ms);
+  delay(delay_ms/2);
+  printsPerLine();
+  delay(delay_ms/2);
 }
 
 
